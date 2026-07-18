@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Sidebar from "../../../../components/Sidebar";
 import api from "../../../../services/api";
 import ProtectedRoute from "../../../../components/ProtectedRoute";
-import Footer from "../../components/Footer";
+
 
 export default function EditStudent() {
 

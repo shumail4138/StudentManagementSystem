@@ -5,7 +5,6 @@ import { useParams, useRouter } from "next/navigation";
 import Sidebar from "../../../../components/Sidebar";
 import ProtectedRoute from "../../../../components/ProtectedRoute";
 import api from "../../../../services/api";
-import Footer from "../../components/Footer";
 
 export default function ViewStudent() {
   const { id } = useParams();
