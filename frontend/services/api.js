@@ -1,7 +1,9 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://studentmanagementsystem-46mg.onrender.com/api",
+  baseURL:
+    process.env.NEXT_PUBLIC_API_URL ||
+    "https://studentmanagementsystem-46mg.onrender.com/api",
 });
 
 api.interceptors.request.use((config) => {
