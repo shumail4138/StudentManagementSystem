@@ -30,26 +30,26 @@ export default function Dashboard() {
     <ProtectedRoute>
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-teal-500 via-teal-400 to-emerald-500">
 
-        <div className="flex flex-1">
+        <div className="flex flex-col lg:flex-row flex-1 min-h-0">
 
           {/* Sidebar */}
           <Sidebar />
 
           {/* Main Content */}
-          <main className="flex-1 p-4 sm:p-6 lg:p-8">
+          <main className="flex-1 pt-24 lg:pt-8 p-4 sm:p-6 lg:p-8 overflow-auto">
 
             {/* Heading */}
             <div className="mb-8">
-              <h1 className="text-3xl sm:text-4xl font-bold text-white">
+              <h1 className="text-3xl md:text-4xl font-bold text-white">
                 Dashboard
               </h1>
-              <p className="text-white/80 mt-2">
+              <p className="text-white/90 mt-2">
                 Welcome to the Student Management System
               </p>
             </div>
 
             {/* Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
               <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition">
 
@@ -106,7 +106,7 @@ export default function Dashboard() {
 
                 <div className="overflow-x-auto">
 
-                  <table className="min-w-full">
+                    <table className="min-w-[700px] w-full border">
 
                     <thead>
 
@@ -171,7 +171,9 @@ export default function Dashboard() {
 
         </div>
 
-        <Footer />
+        <div className="border-t border-white/20 bg-[#111827]">
+  <Footer />
+</div>
 
       </div>
     </ProtectedRoute>

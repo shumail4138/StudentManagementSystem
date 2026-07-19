@@ -61,18 +61,18 @@ return (
 
           <Sidebar />
 
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto">
+          <main className="flex-1 pt-20 lg:pt-8 p-4 sm:p-6 lg:p-8 overflow-auto">
 
             <div className="max-w-7xl mx-auto">
 
               {/* Header */}
-              <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-5 mb-8">
+              <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-5 mt-3 lg:mt-0 mb-8">
                 <div>
                   <h1 className="text-3xl md:text-4xl font-bold text-slate-800">
                     Students
                   </h1>
 
-                  <p className="text-slate-500 mt-1">
+                  <p className="text-slate-500 mt-2">
                     Manage all registered students
                   </p>
                 </div>
@@ -110,7 +110,7 @@ return (
 
                 <div className="overflow-x-auto rounded-2xl">
 
-                  <table className="min-w-[900px] w-full">
+                  <table className="min-w-[950px] w-full">
 
                     <thead className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
 

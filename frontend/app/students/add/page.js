@@ -42,11 +42,11 @@ export default function AddStudent() {
     <ProtectedRoute>
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#27c6b2] via-[#22b8a6] to-[#1fa08d]">
 
-        <div className="flex flex-col lg:flex-row flex-1">
+        <div className="flex flex-col lg:flex-row flex-1 min-h-0">
 
           <Sidebar />
 
-          <main className="flex-1 p-4 sm:p-6 lg:p-8">
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto min-h-[calc(100vh-64px)]">
 
             <div className="max-w-3xl mx-auto">
 
