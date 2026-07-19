@@ -28,74 +28,141 @@ export default function Dashboard() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-teal-500 via-teal-400 to-emerald-500">
 
-        {/* Main Section */}
         <div className="flex flex-1">
 
           {/* Sidebar */}
           <Sidebar />
 
-          {/* Content */}
-          <main className="flex-1 bg-gray-100 p-8">
+          {/* Main Content */}
+          <main className="flex-1 p-4 sm:p-6 lg:p-8">
 
-            <h1 className="text-4xl font-bold mb-8">
-              Dashboard
-            </h1>
+            {/* Heading */}
+            <div className="mb-8">
+              <h1 className="text-3xl sm:text-4xl font-bold text-white">
+                Dashboard
+              </h1>
+              <p className="text-white/80 mt-2">
+                Welcome to the Student Management System
+              </p>
+            </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
+            {/* Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-gray-500">Total Students</h2>
-                <p className="text-4xl font-bold text-blue-600">
+              <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition">
+
+                <h2 className="text-gray-500 font-medium">
+                  Total Students
+                </h2>
+
+                <p className="text-5xl font-bold text-teal-600 mt-3">
                   {dashboard.total_students}
                 </p>
+
               </div>
 
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-gray-500">Total Courses</h2>
-                <p className="text-4xl font-bold text-green-600">
+              <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition">
+
+                <h2 className="text-gray-500 font-medium">
+                  Total Courses
+                </h2>
+
+                <p className="text-5xl font-bold text-emerald-600 mt-3">
                   {dashboard.total_courses}
                 </p>
+
               </div>
 
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-gray-500">Recent Students</h2>
-                <p className="text-4xl font-bold text-red-600">
+              <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition">
+
+                <h2 className="text-gray-500 font-medium">
+                  Recent Students
+                </h2>
+
+                <p className="text-5xl font-bold text-cyan-600 mt-3">
                   {dashboard.recent_students.length}
                 </p>
+
               </div>
 
             </div>
 
-            <div className="bg-white mt-8 p-6 rounded-lg shadow">
+            {/* Recent Students */}
+            <div className="mt-8 bg-white rounded-2xl shadow-xl p-6">
 
-              <h2 className="text-2xl font-bold mb-4">
+              <h2 className="text-2xl font-bold text-teal-700 mb-6">
                 Recently Added Students
               </h2>
 
               {dashboard.recent_students.length === 0 ? (
-                <p>No students found.</p>
-              ) : (
-                <table className="w-full border">
-                  <thead>
-                    <tr className="bg-blue-600 text-white">
-                      <th className="p-3">Name</th>
-                      <th className="p-3">Email</th>
-                      <th className="p-3">Course</th>
-                    </tr>
-                  </thead>
 
-                  <tbody>
-                    {dashboard.recent_students.map((student) => (
-                      <tr key={student.id} className="border-b">
-                        <td className="p-3">{student.name}</td>
-                        <td className="p-3">{student.email}</td>
-                        <td className="p-3">{student.course}</td>
+                <div className="text-center py-10 text-gray-500">
+                  No students found.
+                </div>
+
+              ) : (
+
+                <div className="overflow-x-auto">
+
+                  <table className="min-w-full">
+
+                    <thead>
+
+                      <tr className="bg-teal-600 text-white">
+
+                        <th className="px-5 py-3 text-left">
+                          Name
+                        </th>
+
+                        <th className="px-5 py-3 text-left">
+                          Email
+                        </th>
+
+                        <th className="px-5 py-3 text-left">
+                          Course
+                        </th>
+
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+
+                    </thead>
+
+                    <tbody>
+
+                      {dashboard.recent_students.map((student, index) => (
+
+                        <tr
+                          key={student.id}
+                          className={`${
+                            index % 2 === 0
+                              ? "bg-gray-50"
+                              : "bg-white"
+                          } hover:bg-teal-50 transition`}
+                        >
+
+                          <td className="px-5 py-4">
+                            {student.name}
+                          </td>
+
+                          <td className="px-5 py-4">
+                            {student.email}
+                          </td>
+
+                          <td className="px-5 py-4">
+                            {student.course}
+                          </td>
+
+                        </tr>
+
+                      ))}
+
+                    </tbody>
+
+                  </table>
+
+                </div>
+
               )}
 
             </div>

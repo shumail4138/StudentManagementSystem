@@ -1,7 +1,10 @@
 export default function Footer() {
   return (
-    <footer className="w-full bg-blue-700 text-white text-center py-4">
-      Copyright © 2026 by <strong>Shumail Rahat Khan</strong> | All Rights Reserved
+    <footer className="border-t border-white/10 bg-[#0f172a] text-gray-300">
+      <div className="mx-auto max-w-7xl px-6 py-5 text-center text-sm">
+        © {new Date().getFullYear()} Student Management System |
+        Developed by <span className="font-semibold text-white">Shumail Rahat Khan</span>
+      </div>
     </footer>
   );
 }

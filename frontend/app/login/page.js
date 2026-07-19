@@ -10,7 +10,6 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -26,108 +25,80 @@ export default function LoginPage() {
       formData.append("username", email);
       formData.append("password", password);
 
-      const response = await api.post(
-        "/auth/login",
-        formData,
-        {
-          headers: {
-            "Content-Type":
-              "application/x-www-form-urlencoded",
-          },
-        }
-      );
+      const response = await api.post("/auth/login", formData, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
 
-      console.log("========== LOGIN SUCCESS ==========");
-      console.log("Full Response:", response);
-      console.log("Response Data:", response.data);
-      console.log("Access Token:", response.data.access_token);
-
-      localStorage.setItem(
-        "token",
-        response.data.access_token
-      );
-
-      console.log(
-        "Stored Token:",
-        localStorage.getItem("token")
-      );
-
-      alert("Login Successful!");
+      localStorage.setItem("token", response.data.access_token);
 
       router.push("/dashboard");
-
     } catch (err) {
-
-      console.log("========== LOGIN FAILED ==========");
-      console.log("Error:", err);
-
-      if (err.response) {
-        console.log("Status:", err.response.status);
-        console.log("Response:", err.response.data);
-      }
-
+      console.log(err);
       setError("Invalid Email or Password");
-
     } finally {
-
       setLoading(false);
-
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-100">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-teal-500 via-teal-400 to-emerald-500">
 
-      {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center">
+      <main className="flex-1 flex items-center justify-center px-4 py-8">
 
-        <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-md">
+        <div className="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl">
 
-          <h1 className="text-3xl font-bold text-center mb-6">
-            Student Management
-          </h1>
+          <div className="bg-teal-600 px-6 py-6">
+            <h1 className="text-center text-2xl font-bold text-white sm:text-3xl">
+              Student Management System
+            </h1>
+          </div>
 
-          <form onSubmit={handleLogin}>
+          <div className="p-6 sm:p-8">
 
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full border p-3 rounded mb-4"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <form onSubmit={handleLogin} className="space-y-5">
 
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full border p-3 rounded mb-4"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+              <input
+                type="email"
+                placeholder="Email"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-300"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
 
-            {error && (
-              <p className="text-red-500 mb-4">
-                {error}
-              </p>
-            )}
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-300"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700 disabled:bg-gray-400"
-            >
-              {loading ? "Logging in..." : "Login"}
-            </button>
+              {error && (
+                <p className="text-center text-sm font-medium text-red-500">
+                  {error}
+                </p>
+              )}
 
-          </form>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-lg bg-teal-600 py-3 text-base font-semibold text-white transition hover:bg-teal-700 disabled:bg-gray-400"
+              >
+                {loading ? "Logging in..." : "Login"}
+              </button>
+
+            </form>
+
+          </div>
 
         </div>
 
-      </div>
+      </main>
 
-      {/* Footer */}
       <Footer />
 
     </div>

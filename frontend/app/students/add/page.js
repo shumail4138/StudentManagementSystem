@@ -40,73 +40,113 @@ export default function AddStudent() {
 
   return (
     <ProtectedRoute>
-    <div className="flex">
-      <Sidebar />
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#27c6b2] via-[#22b8a6] to-[#1fa08d]">
 
-      <div className="flex-1 p-8 bg-gray-100 min-h-screen">
+        <div className="flex flex-col lg:flex-row flex-1">
 
-        <h1 className="text-4xl font-bold mb-6">
-          Add Student
-        </h1>
+          <Sidebar />
 
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white p-6 rounded shadow space-y-4"
-        >
-          <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            className="w-full border p-3 rounded"
-            value={student.name}
-            onChange={handleChange}
-            required
-          />
+          <main className="flex-1 p-4 sm:p-6 lg:p-8">
 
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            className="w-full border p-3 rounded"
-            value={student.email}
-            onChange={handleChange}
-            required
-          />
+            <div className="max-w-3xl mx-auto">
 
-          <input
-            type="text"
-            name="phone"
-            placeholder="Phone Number"
-            className="w-full border p-3 rounded"
-            value={student.phone}
-            onChange={handleChange}
-          />
+              {/* Heading */}
+              <div className="mb-8">
 
-          <input
-            type="text"
-            name="course"
-            placeholder="Course"
-            className="w-full border p-3 rounded"
-            value={student.course}
-            onChange={handleChange}
-          />
+                <h1 className="text-3xl md:text-4xl font-bold text-white">
+                  Add Student
+                </h1>
 
-          <input
-            type="date"
-            name="dob"
-            className="w-full border p-3 rounded"
-            value={student.dob}
-            onChange={handleChange}
-          />
+                <p className="text-teal-100 mt-2">
+                  Fill in the details to register a new student.
+                </p>
 
-          <button
-            className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700"
-          >
-            Add Student
-          </button>
-        </form>
+              </div>
+
+              {/* Form Card */}
+              <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8">
+
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-5"
+                >
+
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Full Name"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
+                    value={student.name}
+                    onChange={handleChange}
+                    required
+                  />
+
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email Address"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
+                    value={student.email}
+                    onChange={handleChange}
+                    required
+                  />
+
+                  <input
+                    type="text"
+                    name="phone"
+                    placeholder="Phone Number"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
+                    value={student.phone}
+                    onChange={handleChange}
+                  />
+
+                  <input
+                    type="text"
+                    name="course"
+                    placeholder="Course"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
+                    value={student.course}
+                    onChange={handleChange}
+                  />
+
+                  <input
+                    type="date"
+                    name="dob"
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
+                    value={student.dob}
+                    onChange={handleChange}
+                  />
+
+                  <div className="flex flex-col sm:flex-row gap-4 pt-2">
+
+                    <button
+                      type="submit"
+                      className="w-full sm:w-auto bg-gradient-to-r from-teal-600 to-emerald-600 text-white px-8 py-3 rounded-xl shadow-lg hover:scale-105 transition"
+                    >
+                      Add Student
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => router.push("/students")}
+                      className="w-full sm:w-auto border border-slate-300 bg-white text-slate-700 px-8 py-3 rounded-xl hover:bg-slate-100 transition"
+                    >
+                      Cancel
+                    </button>
+
+                  </div>
+
+                </form>
+
+              </div>
+
+            </div>
+
+          </main>
+
+        </div>
+
       </div>
-    </div>
     </ProtectedRoute>
   );
 }

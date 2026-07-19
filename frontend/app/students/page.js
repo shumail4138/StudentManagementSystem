@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Sidebar from "../../components/Sidebar";
-import api from "../../services/api";
+import Footer from "../../components/Footer";
 import ProtectedRoute from "../../components/ProtectedRoute";
 import ExportButtons from "../../components/ExportButtons";
-import Footer from "../../components/Footer";
+import api from "../../services/api";
 
 export default function StudentsPage() {
   const [students, setStudents] = useState([]);
@@ -45,147 +45,195 @@ export default function StudentsPage() {
 
     try {
       await api.delete(`/students/${id}`);
-
       alert("Student deleted successfully");
-
       loadStudents();
     } catch (error) {
       console.log(error);
-
       alert("Error deleting student");
     }
   };
 
 return (
   <ProtectedRoute>
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#27c6b2] via-[#22b8a6] to-[#1fa08d]">
 
-      {/* Main Section */}
-      <div className="flex flex-1">
+        <div className="flex flex-col lg:flex-row flex-1">
 
-        {/* Sidebar */}
-        <Sidebar />
+          <Sidebar />
 
-        {/* Content */}
-        <main className="flex-1 p-8 bg-gray-100">
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto">
 
-          {/* Header */}
-          <div className="flex justify-between items-center mb-6">
+            <div className="max-w-7xl mx-auto">
 
-            <h1 className="text-4xl font-bold">
-              Students
-            </h1>
+              {/* Header */}
+              <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-5 mb-8">
+                <div>
+                  <h1 className="text-3xl md:text-4xl font-bold text-slate-800">
+                    Students
+                  </h1>
 
-            <div className="flex gap-3 items-center">
+                  <p className="text-slate-500 mt-1">
+                    Manage all registered students
+                  </p>
+                </div>
 
-              <ExportButtons students={students} />
+                <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
 
-              <Link
-                href="/students/add"
-                className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
-              >
-                + Add Student
-              </Link>
+                  <ExportButtons students={students} />
+
+                  <Link
+                    href="/students/add"
+                    className="w-full sm:w-auto text-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg hover:scale-105 hover:shadow-xl transition"
+                  >
+                    + Add Student
+                  </Link>
+
+                </div>
+
+              </div>
+
+              {/* Search */}
+              <div className="bg-white rounded-2xl shadow-lg p-5 mb-6">
+
+                <input
+                  type="text"
+                  placeholder="🔍 Search by Name, Email or Course..."
+                  className="w-full border border-slate-300 rounded-xl px-4 py-3 text-sm md:text-base outline-none focus:ring-2 focus:ring-blue-500"
+                  value={search}
+                  onChange={(e) => searchStudents(e.target.value)}
+                />
+
+              </div>
+
+              {/* Table */}
+              <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+
+                <div className="overflow-x-auto rounded-2xl">
+
+                  <table className="min-w-[900px] w-full">
+
+                    <thead className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+
+                      <tr>
+                        <th className="p-3 md:p-4 text-left whitespace-nowrap">ID</th>
+                        <th className="p-3 md:p-4 text-left whitespace-nowrap">Name</th>
+                        <th className="p-3 md:p-4 text-left whitespace-nowrap">Email</th>
+                        <th className="p-3 md:p-4 text-left whitespace-nowrap">Phone</th>
+                        <th className="p-3 md:p-4 text-left whitespace-nowrap">Course</th>
+                        <th className="p-3 md:p-4 text-center whitespace-nowrap">Actions</th>
+                      </tr>
+
+                    </thead>
+
+                    <tbody>
+{students.length === 0 ? (
+
+  <tr>
+    <td
+      colSpan="6"
+      className="text-center py-12 text-slate-500"
+    >
+      <div className="flex flex-col items-center">
+
+        <div className="text-5xl md:text-6xl mb-3">🎓</div>
+
+        <h2 className="text-xl font-semibold">
+          No Students Found
+        </h2>
+
+        <p className="mt-2">
+          Add your first student to get started.
+        </p>
+
+      </div>
+    </td>
+  </tr>
+
+) : (
+
+  students.map((student) => (
+
+    <tr
+      key={student.id}
+      className="border-b hover:bg-blue-50 transition"
+    >
+      <td className="p-3 md:p-4 whitespace-nowrap">{student.id}</td>
+
+      <td className="p-3 md:p-4 font-medium text-slate-700 whitespace-nowrap">
+        {student.name}
+      </td>
+
+      <td className="p-3 md:p-4 whitespace-nowrap">
+        {student.email}
+      </td>
+
+      <td className="p-3 md:p-4 whitespace-nowrap">
+        {student.phone}
+      </td>
+
+      <td className="p-3 md:p-4 whitespace-nowrap">
+        <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
+          {student.course}
+        </span>
+      </td>
+
+      <td className="p-3 md:p-4">
+
+        <div className="flex flex-col sm:flex-row justify-center gap-2">
+
+          <Link
+            href={`/students/view/${student.id}`}
+           className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 text-sm rounded-lg transition"
+          >
+            View
+          </Link>
+
+          <Link
+            href={`/students/edit/${student.id}`}
+            className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 text-sm rounded-lg transition"
+          >
+            Edit
+          </Link>
+
+          <button
+            onClick={() => deleteStudent(student.id)}
+            className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 text-sm rounded-lg transition"
+          >
+            Delete
+          </button>
+
+        </div>
+
+      </td>
+
+    </tr>
+
+  ))
+
+)}
+
+                  </tbody>
+
+                </table>
+
+              </div>
 
             </div>
 
           </div>
 
-          {/* Search */}
-          <input
-            type="text"
-            placeholder="Search by Name, Email or Course"
-            className="border p-3 rounded w-full mb-6"
-            value={search}
-            onChange={(e) => searchStudents(e.target.value)}
-          />
+          </main>
 
-          {/* Table */}
-          <table className="w-full bg-white shadow rounded">
+        </div>
 
-            <thead>
-              <tr className="bg-blue-600 text-white">
-                <th className="p-3">ID</th>
-                <th className="p-3">Name</th>
-                <th className="p-3">Email</th>
-                <th className="p-3">Phone</th>
-                <th className="p-3">Course</th>
-                <th className="p-3">Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-
-              {students.length === 0 ? (
-
-                <tr>
-                  <td
-                    colSpan="6"
-                    className="text-center p-6 text-gray-500"
-                  >
-                    No students found.
-                  </td>
-                </tr>
-
-              ) : (
-
-                students.map((student) => (
-
-                  <tr
-                    key={student.id}
-                    className="border-b hover:bg-gray-50"
-                  >
-                    <td className="p-3">{student.id}</td>
-                    <td className="p-3">{student.name}</td>
-                    <td className="p-3">{student.email}</td>
-                    <td className="p-3">{student.phone}</td>
-                    <td className="p-3">{student.course}</td>
-
-                    <td className="p-3">
-                      <div className="flex gap-2">
-
-                        <Link
-                          href={`/students/view/${student.id}`}
-                          className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
-                        >
-                          View
-                        </Link>
-
-                        <Link
-                          href={`/students/edit/${student.id}`}
-                          className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
-                        >
-                          Edit
-                        </Link>
-
-                        <button
-                          onClick={() => deleteStudent(student.id)}
-                          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                        >
-                          Delete
-                        </button>
-
-                      </div>
-                    </td>
-
-                  </tr>
-
-                ))
-
-              )}
-
-            </tbody>
-
-          </table>
-
-        </main>
+        {/* Footer */}
+        <div className="border-t border-slate-200 bg-white">
+          <Footer />
+        </div>
 
       </div>
 
-      {/* Footer */}
-      <Footer />
+    </ProtectedRoute>
 
-    </div>
-  </ProtectedRoute>
-);
+  );
 }

@@ -6,9 +6,7 @@ import Sidebar from "../../../../components/Sidebar";
 import api from "../../../../services/api";
 import ProtectedRoute from "../../../../components/ProtectedRoute";
 
-
 export default function EditStudent() {
-
   const { id } = useParams();
   const router = useRouter();
 
@@ -27,9 +25,7 @@ export default function EditStudent() {
   const fetchStudent = async () => {
     try {
       const response = await api.get(`/students/${id}`);
-
       setStudent(response.data);
-
     } catch (error) {
       console.log(error);
     }
@@ -46,86 +42,123 @@ export default function EditStudent() {
     e.preventDefault();
 
     try {
-
       await api.put(`/students/${id}`, student);
 
       alert("Student Updated Successfully");
 
       router.push("/students");
-
     } catch (error) {
-
-      alert(error.response?.data?.detail);
-
+      alert(error.response?.data?.detail || "Error updating student");
     }
   };
 
   return (
     <ProtectedRoute>
-    <div className="flex">
-      <Sidebar />
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#27c6b2] via-[#22b8a6] to-[#1fa08d]">
 
-      <div className="flex-1 p-8">
+        <div className="flex flex-col lg:flex-row flex-1">
 
-        <h1 className="text-3xl font-bold mb-6">
-          Edit Student
-        </h1>
+          <Sidebar />
 
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white p-6 rounded shadow space-y-4"
-        >
+          <main className="flex-1 p-4 sm:p-6 lg:p-8">
 
-          <input
-            type="text"
-            name="name"
-            value={student.name}
-            onChange={handleChange}
-            className="w-full border p-3 rounded"
-          />
+            <div className="max-w-3xl mx-auto">
 
-          <input
-            type="email"
-            name="email"
-            value={student.email}
-            onChange={handleChange}
-            className="w-full border p-3 rounded"
-          />
+              {/* Heading */}
+              <div className="mb-8">
 
-          <input
-            type="text"
-            name="phone"
-            value={student.phone}
-            onChange={handleChange}
-            className="w-full border p-3 rounded"
-          />
+                <h1 className="text-3xl md:text-4xl font-bold text-white">
+                  Edit Student
+                </h1>
 
-          <input
-            type="text"
-            name="course"
-            value={student.course}
-            onChange={handleChange}
-            className="w-full border p-3 rounded"
-          />
+                <p className="text-teal-100 mt-2">
+                  Update the student's information.
+                </p>
 
-          <input
-            type="date"
-            name="dob"
-            value={student.dob}
-            onChange={handleChange}
-            className="w-full border p-3 rounded"
-          />
+              </div>
 
-          <button
-            className="bg-blue-600 text-white px-5 py-3 rounded"
-          >
-            Update Student
-          </button>
+              {/* Form Card */}
+              <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8">
 
-        </form>
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-5"
+                >
+
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Full Name"
+                    value={student.name}
+                    onChange={handleChange}
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email Address"
+                    value={student.email}
+                    onChange={handleChange}
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+
+                  <input
+                    type="text"
+                    name="phone"
+                    placeholder="Phone Number"
+                    value={student.phone}
+                    onChange={handleChange}
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+
+                  <input
+                    type="text"
+                    name="course"
+                    placeholder="Course"
+                    value={student.course}
+                    onChange={handleChange}
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+
+                  <input
+                    type="date"
+                    name="dob"
+                    value={student.dob}
+                    onChange={handleChange}
+                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+
+                  <div className="flex flex-col sm:flex-row gap-4 pt-2">
+
+                    <button
+                      type="submit"
+                      className="w-full sm:w-auto bg-gradient-to-r from-teal-600 to-emerald-600 text-white px-8 py-3 rounded-xl shadow-lg hover:scale-105 transition"
+                    >
+                      Update Student
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => router.push("/students")}
+                      className="w-full sm:w-auto border border-slate-300 bg-white text-slate-700 px-8 py-3 rounded-xl hover:bg-slate-100 transition"
+                    >
+                      Cancel
+                    </button>
+
+                  </div>
+
+                </form>
+
+              </div>
+
+            </div>
+
+          </main>
+
+        </div>
 
       </div>
-    </div>
     </ProtectedRoute>
   );
 }
