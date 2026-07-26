@@ -1,11 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
-from app.security import verify_token
 
+from app.security import verify_token
 from database.database import get_db
 from models.student import Student
-from schemas.student import StudentCreate, StudentUpdate, StudentResponse
+from models.course import Course
+from schemas.student import (
+    StudentCreate,
+    StudentUpdate,
+    StudentResponse,
+)
 
 router = APIRouter(
     prefix="/api/students",
@@ -33,12 +38,22 @@ def create_student(
             detail="Email already exists"
         )
 
+    course = db.query(Course).filter(
+        Course.id == student.course_id
+    ).first()
+
+    if not course:
+        raise HTTPException(
+            status_code=404,
+            detail="Course not found"
+        )
+
     new_student = Student(
         name=student.name,
         email=student.email,
         phone=student.phone,
-        course=student.course,
-        dob=student.dob
+        dob=student.dob,
+        course_id=student.course_id
     )
 
     db.add(new_student)
@@ -50,30 +65,47 @@ def create_student(
 
 # ----------------------------
 # GET ALL STUDENTS
-# SEARCH + PAGINATION
 # ----------------------------
 @router.get("/", response_model=list[StudentResponse])
 def get_students(
     search: str = Query(default=""),
-    page: int = Query(default=1, ge=1),
-    limit: int = Query(default=10, ge=1, le=100),
+    course_id: int | None = Query(default=None),
+    sort: str = Query(default="newest"),
+    page: int = Query(default=1),
+    limit: int = Query(default=10),
     db: Session = Depends(get_db)
 ):
 
     query = db.query(Student)
 
-    # Search
+    if course_id:
+        query = query.filter(Student.course_id == course_id)
+
     if search:
-        query = query.filter(
-            or_(
-                Student.name.ilike(f"%{search}%"),
-                Student.email.ilike(f"%{search}%"),
-                Student.course.ilike(f"%{search}%")
+        query = (
+            query.join(Course)
+            .filter(
+                or_(
+                    Student.name.ilike(f"%{search}%"),
+                    Student.email.ilike(f"%{search}%"),
+                    Course.name.ilike(f"%{search}%")
+                )
             )
         )
 
-    # Pagination
     skip = (page - 1) * limit
+
+    if sort == "az":
+        query = query.order_by(Student.name.asc())
+
+    elif sort == "za":
+        query = query.order_by(Student.name.desc())
+
+    elif sort == "oldest":
+        query = query.order_by(Student.created_at.asc())
+
+    else:
+        query = query.order_by(Student.created_at.desc())
 
     students = (
         query
@@ -89,13 +121,16 @@ def get_students(
 # GET SINGLE STUDENT
 # ----------------------------
 @router.get("/{student_id}", response_model=StudentResponse)
-def get_student(student_id: int, db: Session = Depends(get_db)):
+def get_student(
+    student_id: int,
+    db: Session = Depends(get_db)
+):
 
     student = db.query(Student).filter(
         Student.id == student_id
     ).first()
 
-    if student is None:
+    if not student:
         raise HTTPException(
             status_code=404,
             detail="Student not found"
@@ -119,13 +154,12 @@ def update_student(
         Student.id == student_id
     ).first()
 
-    if student is None:
+    if not student:
         raise HTTPException(
             status_code=404,
             detail="Student not found"
         )
 
-    # Check duplicate email
     email_exists = db.query(Student).filter(
         Student.email == updated.email,
         Student.id != student_id
@@ -137,11 +171,21 @@ def update_student(
             detail="Email already exists"
         )
 
+    course = db.query(Course).filter(
+        Course.id == updated.course_id
+    ).first()
+
+    if not course:
+        raise HTTPException(
+            status_code=404,
+            detail="Course not found"
+        )
+
     student.name = updated.name
     student.email = updated.email
     student.phone = updated.phone
-    student.course = updated.course
     student.dob = updated.dob
+    student.course_id = updated.course_id
 
     db.commit()
     db.refresh(student)
@@ -163,7 +207,7 @@ def delete_student(
         Student.id == student_id
     ).first()
 
-    if student is None:
+    if not student:
         raise HTTPException(
             status_code=404,
             detail="Student not found"

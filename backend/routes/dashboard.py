@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from app.security import verify_token
+from datetime import date
 
+from app.security import verify_token
 from database.database import get_db
 from models.student import Student
+from models.course import Course
 
 router = APIRouter(
     prefix="/api/dashboard",
@@ -18,17 +20,52 @@ def dashboard(
     user: str = Depends(verify_token)
 ):
 
-    # Total students
+    # ==========================
+    # Total Students
+    # ==========================
     total_students = db.query(Student).count()
 
-    # Total unique courses
-    total_courses = db.query(
-        func.count(func.distinct(Student.course))
-    ).scalar()
+    # ==========================
+    # Total Courses
+    # ==========================
+    total_courses = db.query(Course).count()
 
-    # Recent 5 students
-    recent_students = (
+    # ==========================
+    # Student Statistics
+    # ==========================
+    today = date.today()
+
+    today_students = (
         db.query(Student)
+        .filter(
+            func.date(Student.created_at) == today
+        )
+        .count()
+    )
+
+    month_students = (
+        db.query(Student)
+        .filter(
+            func.extract("month", Student.created_at) == today.month,
+            func.extract("year", Student.created_at) == today.year
+        )
+        .count()
+    )
+
+    year_students = (
+        db.query(Student)
+        .filter(
+            func.extract("year", Student.created_at) == today.year
+        )
+        .count()
+    )
+
+    # ==========================
+    # Recent Students
+    # ==========================
+    recent_students = (
+        db.query(Student, Course)
+        .join(Course, Student.course_id == Course.id)
         .order_by(Student.created_at.desc())
         .limit(5)
         .all()
@@ -36,16 +73,50 @@ def dashboard(
 
     recent = []
 
-    for student in recent_students:
+    for student, course in recent_students:
         recent.append({
             "id": student.id,
             "name": student.name,
-            "course": student.course,
-            "email": student.email
+            "email": student.email,
+            "course": course.name,
+            "created_at": student.created_at
         })
 
+    # ==========================
+    # Students by Course
+    # ==========================
+    students_by_course = (
+        db.query(
+            Course.name.label("course"),
+            func.count(Student.id).label("count")
+        )
+        .outerjoin(
+            Student,
+            Student.course_id == Course.id
+        )
+        .group_by(Course.id)
+        .all()
+    )
+
+    chart = []
+
+    for row in students_by_course:
+        chart.append({
+            "course": row.course,
+            "count": row.count
+        })
+
+    # ==========================
+    # Response
+    # ==========================
     return {
         "total_students": total_students,
         "total_courses": total_courses,
-        "recent_students": recent
+
+        "today_students": today_students,
+        "month_students": month_students,
+        "year_students": year_students,
+
+        "recent_students": recent,
+        "students_by_course": chart
     }

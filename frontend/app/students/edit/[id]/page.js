@@ -3,29 +3,48 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Sidebar from "../../../../components/Sidebar";
-import api from "../../../../services/api";
 import ProtectedRoute from "../../../../components/ProtectedRoute";
+import api from "../../../../services/api";
 
 export default function EditStudent() {
   const { id } = useParams();
   const router = useRouter();
 
+  const [courses, setCourses] = useState([]);
+
   const [student, setStudent] = useState({
     name: "",
     email: "",
     phone: "",
-    course: "",
+    course_id: "",
     dob: "",
   });
 
   useEffect(() => {
     fetchStudent();
+    loadCourses();
   }, []);
+
+  const loadCourses = async () => {
+    try {
+      const response = await api.get("/courses/");
+      setCourses(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const fetchStudent = async () => {
     try {
       const response = await api.get(`/students/${id}`);
-      setStudent(response.data);
+
+      setStudent({
+        name: response.data.name,
+        email: response.data.email,
+        phone: response.data.phone,
+        dob: response.data.dob,
+        course_id: response.data.course.id,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -42,10 +61,12 @@ export default function EditStudent() {
     e.preventDefault();
 
     try {
-      await api.put(`/students/${id}`, student);
+      await api.put(`/students/${id}`, {
+        ...student,
+        course_id: Number(student.course_id),
+      });
 
       alert("Student Updated Successfully");
-
       router.push("/students");
     } catch (error) {
       alert(error.response?.data?.detail || "Error updating student");
@@ -54,13 +75,13 @@ export default function EditStudent() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#27c6b2] via-[#22b8a6] to-[#1fa08d]">
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#27c6b2] via-[#22b8a6] to-[#1fa08d] dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
 
         <div className="flex flex-col lg:flex-row flex-1">
 
           <Sidebar />
 
-          <main className="flex-1 p-4 sm:p-6 lg:p-8">
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto">
 
             <div className="max-w-3xl mx-auto">
 
@@ -71,14 +92,14 @@ export default function EditStudent() {
                   Edit Student
                 </h1>
 
-                <p className="text-teal-100 mt-2">
-                  Update the student's information.
+                <p className="text-teal-100 dark:text-slate-300 mt-2">
+                  Update student information.
                 </p>
 
               </div>
 
               {/* Form Card */}
-              <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 md:p-8">
 
                 <form
                   onSubmit={handleSubmit}
@@ -88,48 +109,57 @@ export default function EditStudent() {
                   <input
                     type="text"
                     name="name"
-                    placeholder="Full Name"
                     value={student.name}
                     onChange={handleChange}
-                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
+                    placeholder="Full Name"
+                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
                   />
 
                   <input
                     type="email"
                     name="email"
-                    placeholder="Email Address"
                     value={student.email}
                     onChange={handleChange}
-                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
+                    placeholder="Email Address"
+                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
                   />
 
                   <input
                     type="text"
                     name="phone"
-                    placeholder="Phone Number"
                     value={student.phone}
                     onChange={handleChange}
-                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
+                    placeholder="Phone Number"
+                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
                   />
 
-                  <input
-                    type="text"
-                    name="course"
-                    placeholder="Course"
-                    value={student.course}
+                  <select
+                    name="course_id"
+                    value={student.course_id}
                     onChange={handleChange}
-                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
-                  />
+                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
+                  >
+                    <option value="">Select Course</option>
+
+                    {courses.map((course) => (
+                      <option
+                        key={course.id}
+                        value={course.id}
+                      >
+                        {course.name}
+                      </option>
+                    ))}
+                  </select>
 
                   <input
                     type="date"
                     name="dob"
                     value={student.dob}
                     onChange={handleChange}
-                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
+                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
                   />
 
-                  <div className="flex flex-col sm:flex-row gap-4 pt-2">
+                                    <div className="flex flex-col sm:flex-row gap-4 pt-2">
 
                     <button
                       type="submit"
@@ -141,7 +171,7 @@ export default function EditStudent() {
                     <button
                       type="button"
                       onClick={() => router.push("/students")}
-                      className="w-full sm:w-auto border border-slate-300 bg-white text-slate-700 px-8 py-3 rounded-xl hover:bg-slate-100 transition"
+                      className="w-full sm:w-auto border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-700 text-slate-700 dark:text-white px-8 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-600 transition"
                     >
                       Cancel
                     </button>

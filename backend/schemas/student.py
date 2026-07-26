@@ -1,13 +1,13 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from datetime import date, datetime
 
 
 class StudentBase(BaseModel):
     name: str
-    email: EmailStr
+    email: str
     phone: str
-    course: str
     dob: date
+    course_id: int
 
 
 class StudentCreate(StudentBase):
@@ -18,8 +18,21 @@ class StudentUpdate(StudentBase):
     pass
 
 
-class StudentResponse(StudentBase):
+class CourseResponse(BaseModel):
     id: int
+    name: str
+
+    class Config:
+        from_attributes = True
+
+
+class StudentResponse(BaseModel):
+    id: int
+    name: str
+    email: str
+    phone: str
+    dob: date
+    course: CourseResponse
     created_at: datetime
 
     class Config:

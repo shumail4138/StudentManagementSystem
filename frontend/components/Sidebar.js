@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
@@ -29,12 +30,12 @@ export default function Sidebar() {
 
       {/* Mobile Menu */}
       {open && (
-        <div className="lg:hidden fixed top-16 left-0 w-full bg-white shadow-xl z-40">
+        <div className="lg:hidden fixed top-16 left-0 w-full bg-white dark:bg-slate-900 shadow-xl z-40">
 
           <Link
             href="/dashboard"
             onClick={() => setOpen(false)}
-            className="block px-6 py-4 border-b hover:bg-blue-50"
+            className="block px-6 py-4 border-b border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition"
           >
             📊 Dashboard
           </Link>
@@ -42,14 +43,29 @@ export default function Sidebar() {
           <Link
             href="/students"
             onClick={() => setOpen(false)}
-            className="block px-6 py-4 border-b hover:bg-blue-50"
+            className="block px-6 py-4 border-b border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition"
           >
             👨‍🎓 Students
           </Link>
 
+          <Link
+            href="/courses"
+            onClick={() => setOpen(false)}
+            className="block px-6 py-4 border-b border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition"
+          >
+            📚 Courses
+          </Link>
+
+          {/* Dark Mode */}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white">
+            <span>🌙 Dark Mode</span>
+            <ThemeSwitcher />
+          </div>
+
+          {/* Logout */}
           <button
             onClick={logout}
-            className="w-full text-left px-6 py-4 text-red-600 hover:bg-red-50"
+            className="w-full text-left px-6 py-4 text-red-500 hover:bg-red-50 dark:hover:bg-slate-800 transition"
           >
             🚪 Logout
           </button>
@@ -76,28 +92,43 @@ export default function Sidebar() {
 
           <Link
             href="/dashboard"
-            className="block px-5 py-3 rounded-xl hover:bg-white/20 transition duration-300"
+            className="block px-5 py-3 rounded-xl hover:bg-white/20 dark:hover:bg-slate-700 transition duration-300"
           >
             📊 Dashboard
           </Link>
 
           <Link
             href="/students"
-            className="block px-5 py-3 rounded-xl hover:bg-white/20 transition duration-300"
+            className="block px-5 py-3 rounded-xl hover:bg-white/20 dark:hover:bg-slate-700 transition duration-300"
           >
             👨‍🎓 Students
           </Link>
 
+          <Link
+            href="/courses"
+            className="block px-5 py-3 rounded-xl hover:bg-white/20 dark:hover:bg-slate-700 transition duration-300"
+          >
+            📚 Courses
+          </Link>
+
+           {/* Dark Mode */}
+  <div className="flex items-center justify-between px-5 py-3 rounded-xl hover:bg-white/20 transition">
+    <span>🌙 Dark Mode</span>
+    <ThemeSwitcher />
+  </div>
+
         </nav>
+        
 
-        {/* Logout */}
-        <div className="p-6 border-t border-blue-500">
+        {/* Bottom Section */}
+        <div className="p-6 border-t border-blue-500 space-y-4">
 
+          {/* Logout */}
           <button
             onClick={logout}
             className="w-full bg-red-500 hover:bg-red-600 transition py-3 rounded-xl font-semibold"
           >
-            Logout
+            🚪 Logout
           </button>
 
         </div>

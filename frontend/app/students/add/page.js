@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "../../../components/Sidebar";
 import api from "../../../services/api";
@@ -9,13 +9,28 @@ import ProtectedRoute from "../../../components/ProtectedRoute";
 export default function AddStudent() {
   const router = useRouter();
 
+  const [courses, setCourses] = useState([]);
+
   const [student, setStudent] = useState({
     name: "",
     email: "",
     phone: "",
-    course: "",
+    course_id: "",
     dob: "",
   });
+
+  useEffect(() => {
+    loadCourses();
+  }, []);
+
+  const loadCourses = async () => {
+    try {
+      const response = await api.get("/courses/");
+      setCourses(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleChange = (e) => {
     setStudent({
@@ -28,19 +43,22 @@ export default function AddStudent() {
     e.preventDefault();
 
     try {
-      await api.post("/students/", student);
+      await api.post("/students/", {
+        ...student,
+        course_id: Number(student.course_id),
+      });
 
       alert("Student Added Successfully");
-
       router.push("/students");
     } catch (error) {
-      alert(error.response?.data?.detail || "Error adding student");
+      console.log(error);
+      alert(JSON.stringify(error.response?.data));
     }
   };
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#27c6b2] via-[#22b8a6] to-[#1fa08d]">
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#27c6b2] via-[#22b8a6] to-[#1fa08d] dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
 
         <div className="flex flex-col lg:flex-row flex-1 min-h-0">
 
@@ -57,14 +75,14 @@ export default function AddStudent() {
                   Add Student
                 </h1>
 
-                <p className="text-teal-100 mt-2">
+                <p className="text-teal-100 dark:text-slate-300 mt-2">
                   Fill in the details to register a new student.
                 </p>
 
               </div>
 
-              {/* Form Card */}
-              <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8">
+              {/* Form */}
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 md:p-8">
 
                 <form
                   onSubmit={handleSubmit}
@@ -75,46 +93,58 @@ export default function AddStudent() {
                     type="text"
                     name="name"
                     placeholder="Full Name"
-                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
                     value={student.name}
                     onChange={handleChange}
                     required
+                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
                   />
 
                   <input
                     type="email"
                     name="email"
                     placeholder="Email Address"
-                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
                     value={student.email}
                     onChange={handleChange}
                     required
+                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
                   />
 
                   <input
                     type="text"
                     name="phone"
                     placeholder="Phone Number"
-                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
                     value={student.phone}
                     onChange={handleChange}
+                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
                   />
 
-                  <input
-                    type="text"
-                    name="course"
-                    placeholder="Course"
-                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
-                    value={student.course}
+                  {/* Course Dropdown */}
+                  <select
+                    name="course_id"
+                    value={student.course_id}
                     onChange={handleChange}
-                  />
+                    required
+                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
+                  >
+                    <option value="">Select Course</option>
+
+                    {courses.map((course) => (
+                      <option
+                        key={course.id}
+                        value={course.id}
+                      >
+                        {course.name}
+                      </option>
+                    ))}
+                  </select>
 
                   <input
                     type="date"
                     name="dob"
-                    className="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
                     value={student.dob}
                     onChange={handleChange}
+                    required
+                    className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500"
                   />
 
                   <div className="flex flex-col sm:flex-row gap-4 pt-2">
@@ -129,7 +159,7 @@ export default function AddStudent() {
                     <button
                       type="button"
                       onClick={() => router.push("/students")}
-                      className="w-full sm:w-auto border border-slate-300 bg-white text-slate-700 px-8 py-3 rounded-xl hover:bg-slate-100 transition"
+                      className="w-full sm:w-auto border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-700 text-slate-700 dark:text-white px-8 py-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-600 transition"
                     >
                       Cancel
                     </button>

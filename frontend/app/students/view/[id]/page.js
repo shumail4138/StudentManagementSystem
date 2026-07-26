@@ -28,18 +28,16 @@ export default function ViewStudent() {
   if (!student) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#27c6b2] via-[#22b8a6] to-[#1fa08d]">
+        <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#27c6b2] via-[#22b8a6] to-[#1fa08d] dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
 
           <div className="flex flex-col lg:flex-row flex-1">
 
             <Sidebar />
 
-            <main className="flex-1 flex items-center justify-center p-6">
-
+            <main className="flex-1 flex items-center justify-center">
               <h1 className="text-3xl font-bold text-white">
                 Loading...
               </h1>
-
             </main>
 
           </div>
@@ -51,15 +49,15 @@ export default function ViewStudent() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#27c6b2] via-[#22b8a6] to-[#1fa08d]">
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#27c6b2] via-[#22b8a6] to-[#1fa08d] dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
 
         <div className="flex flex-col lg:flex-row flex-1">
 
           <Sidebar />
 
-          <main className="flex-1 p-4 sm:p-6 lg:p-8">
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto">
 
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-3xl mx-auto">
 
               {/* Heading */}
               <div className="mb-8">
@@ -68,54 +66,95 @@ export default function ViewStudent() {
                   Student Details
                 </h1>
 
-                <p className="text-teal-100 mt-2">
-                  View complete information about the student.
+                <p className="text-teal-100 dark:text-slate-300 mt-2">
+                  View complete student information.
                 </p>
 
               </div>
 
-              {/* Student Card */}
-              <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8">
+              {/* Card */}
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 md:p-8 space-y-5">
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Avatar */}
+                <div className="flex flex-col items-center mb-8">
+
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-r from-teal-600 to-emerald-600 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+                    {student.name.charAt(0).toUpperCase()}
+                  </div>
+
+                  <h2 className="text-2xl font-bold mt-4 text-slate-800 dark:text-white">
+                    {student.name}
+                  </h2>
+
+                  <p className="text-gray-500 dark:text-slate-300">
+                    {student.course?.name}
+                  </p>
+
+                </div>
+
+                {/* Student Details */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
                   <div>
-                    <p className="text-sm text-slate-500">Student ID</p>
-                    <p className="text-lg font-semibold">{student.id}</p>
+                    <p className="text-gray-500 dark:text-slate-400 text-sm">
+                      Student ID
+                    </p>
+                    <p className="font-semibold text-slate-800 dark:text-white">
+                      {student.id}
+                    </p>
                   </div>
 
                   <div>
-                    <p className="text-sm text-slate-500">Full Name</p>
-                    <p className="text-lg font-semibold">{student.name}</p>
+                    <p className="text-gray-500 dark:text-slate-400 text-sm">
+                      Full Name
+                    </p>
+                    <p className="font-semibold text-slate-800 dark:text-white">
+                      {student.name}
+                    </p>
                   </div>
 
                   <div>
-                    <p className="text-sm text-slate-500">Email</p>
-                    <p className="text-lg font-semibold break-all">
+                    <p className="text-gray-500 dark:text-slate-400 text-sm">
+                      Email
+                    </p>
+                    <p className="font-semibold text-slate-800 dark:text-white break-all">
                       {student.email}
                     </p>
                   </div>
 
                   <div>
-                    <p className="text-sm text-slate-500">Phone</p>
-                    <p className="text-lg font-semibold">{student.phone}</p>
+                    <p className="text-gray-500 dark:text-slate-400 text-sm">
+                      Phone
+                    </p>
+                    <p className="font-semibold text-slate-800 dark:text-white">
+                      {student.phone}
+                    </p>
                   </div>
 
                   <div>
-                    <p className="text-sm text-slate-500">Course</p>
-                    <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
-                      {student.course}
+                    <p className="text-gray-500 dark:text-slate-400 text-sm">
+                      Course
+                    </p>
+
+                    <span className="inline-block mt-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-sm">
+                      {student.course?.name}
                     </span>
                   </div>
 
                   <div>
-                    <p className="text-sm text-slate-500">Date of Birth</p>
-                    <p className="text-lg font-semibold">{student.dob}</p>
+                    <p className="text-gray-500 dark:text-slate-400 text-sm">
+                      Date of Birth
+                    </p>
+                    <p className="font-semibold text-slate-800 dark:text-white">
+                      {student.dob}
+                    </p>
                   </div>
 
-                  <div className="md:col-span-2">
-                    <p className="text-sm text-slate-500">Created At</p>
-                    <p className="text-lg font-semibold">
+                  <div className="sm:col-span-2">
+                    <p className="text-gray-500 dark:text-slate-400 text-sm">
+                      Created At
+                    </p>
+                    <p className="font-semibold text-slate-800 dark:text-white">
                       {new Date(student.created_at).toLocaleString()}
                     </p>
                   </div>
@@ -126,17 +165,17 @@ export default function ViewStudent() {
                 <div className="flex flex-col sm:flex-row gap-4 mt-8">
 
                   <button
-                    onClick={() => router.back()}
-                    className="w-full sm:w-auto bg-gradient-to-r from-teal-600 to-emerald-600 text-white px-8 py-3 rounded-xl shadow-lg hover:scale-105 transition"
+                    onClick={() => router.push(`/students/edit/${student.id}`)}
+                    className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl hover:scale-105 transition shadow-lg"
                   >
-                    Back
+                    ✏️ Edit Student
                   </button>
 
                   <button
-                    onClick={() => router.push(`/students/edit/${student.id}`)}
-                    className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white px-8 py-3 rounded-xl shadow-lg transition"
+                    onClick={() => router.push("/students")}
+                    className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl transition shadow-lg"
                   >
-                    Edit Student
+                    ← Back
                   </button>
 
                 </div>
