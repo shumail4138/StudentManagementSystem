@@ -62,7 +62,7 @@ export default function LoginPage() {
               <input
                 type="email"
                 placeholder="Email"
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-300"
+                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-base text-gray-900 placeholder:text-gray-500 outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-300"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -71,7 +71,7 @@ export default function LoginPage() {
               <input
                 type="password"
                 placeholder="Password"
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-300"
+                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-base text-gray-900 placeholder:text-gray-500 outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-300"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
